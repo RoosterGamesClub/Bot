@@ -1,8 +1,15 @@
+import logging
+import os
+import random
+import time
+import datetime
+
 import discord
 from discord.ext import commands
 
+import git
+
 import utils_other 
-import random
 
 ####### Settings ########
 from settings import COMMAND_PREFIX, WELCOME_CHANNEL_ID, MAIN_COLOR, REROL_MESSAGE_ID, REROL_CHANNEL_ID, DISCORD_TOKEN
@@ -22,25 +29,31 @@ bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 
 @bot.event
 async def on_ready():
-  print("bot ready")
+  main_logger = logging.getLogger("bot")
 
-  print("-------------- loading commands --------------")
-  print("loading developer commands...")
+  main_logger.log(logging.INFO, "-------------- loading commands --------------")
+
+  main_logger.log(logging.INFO, "loading developer commands...")
   bot.add_command(ping)
+  bot.add_command(changelog)
+  bot.add_command(log)
 
-  print("loading admin commands...")
+  main_logger.log(logging.INFO, "loading admin commands...")
   bot.add_command(genrerol)
 
-  print("loading user commands...")
+  main_logger.log(logging.INFO, "loading user commands...")
   bot.add_command(poll)
   bot.add_command(boolean)
   bot.add_command(integer)
 
   bot.help_command = helpCommand.CustomHelpCommand()
 
-  print("--------------   loading cogs   --------------")
+  main_logger.log(logging.INFO, "--------------   loading cogs   --------------")
+
+  main_logger.log(logging.INFO, "loading info cog...")
   await bot.add_cog(infoCog.InfoCog(bot))
-  print("---------------------------------------------")
+
+  main_logger.log(logging.INFO, "----------------------------------------------")
 
 # WELCOME MESSAGE
 @bot.event
@@ -198,5 +211,49 @@ async def genrerol(ctx : commands.Context):
 @commands.command(hidden=True, brief="pong", description="test for correct bot connection")
 async def ping(ctx):
   await ctx.send("pong")
+
+@commands.command(hidden=True, brief="latest changes", description="get a list of all the recent improvements, new features and bug fixes done to naota")
+async def changelog(ctx):
+  # obtain the log from local repo
+  repo = git.Repo(os.getcwd())
+
+  commit_list = list(repo.iter_commits(all=True))
+
+  # number of commits = version number
+  version = f"0.0.{len(commit_list)}"
+
+  # show the last 5 commits messages
+  logs = ""
+
+  for i in range(len(commit_list)):
+    
+    if i > 5: break
+
+    commit = commit_list[i]
+
+    date = time.gmtime(commit.committed_date)
+    author = commit.author
+    message = commit.message
+
+    logs += f"[{date.tm_year}/{date.tm_mon}/{date.tm_mday}] - {message}\n"
+
+  em = discord.Embed(title=f"Poio v_{version}", description=logs, color=MAIN_COLOR)
+  await ctx.send(embed=em)
+
+@commands.command(hidden=True, brief="latest logs", description="get a list of the lastest log entries, output will depend on LOG_LEVEL configuration, by default INFO")
+async def log(ctx, lines = 50):
+  title_ = f"Poio.log at {datetime.datetime.now()} last {lines} lines"
+  
+  description_ = "```" 
+  
+  with open("Poio.log", "r") as log_file:
+    for line in (log_file.readlines() [-lines:]):
+      description_ += line
+
+  description_ += "```"
+
+  em = discord.Embed(title=title_, description=description_, color=MAIN_COLOR)
+      
+  await ctx.send(embed=em)
 
 bot.run(DISCORD_TOKEN)

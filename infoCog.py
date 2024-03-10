@@ -1,7 +1,11 @@
+import logging
+
 import discord
 from discord.ext import commands
 
 from settings import MAIN_COLOR
+
+import loggingUtils
 
 class InfoCog(commands.Cog, name="Info"):
 
@@ -10,9 +14,10 @@ class InfoCog(commands.Cog, name="Info"):
   def __init__(self, bot):
     self.bot = bot
 
-  def cog_load(self):
-    super().cog_load()
-    print("loading info cog...")
+    self.logger = logging.getLogger("bot.info_cog")
+
+  async def cog_before_invoke(self, ctx):
+    loggingUtils.log_command_call(self.logger, ctx)
 
   @commands.command(brief="about poio", description="get to know a little bit about Poio and how to contribute")
   async def about(self, ctx):
