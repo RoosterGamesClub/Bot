@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 import utils_other 
+import random
 
 import os
 from dotenv import load_dotenv
@@ -39,6 +40,14 @@ async def on_ready():
   bot.add_command(about)
   bot.add_command(website)
   bot.add_command(github)
+  bot.add_command(linkedin)
+  bot.add_command(x)
+  bot.add_command(instagram)
+  bot.add_command(socials)
+
+  bot.add_command(poll)
+  bot.add_command(boolean)
+  bot.add_command(integer)
 
   print("---------------------------------------------")
 
@@ -108,7 +117,7 @@ async def set_role(guild : discord.guild, member : discord.Member, role_name : s
     if is_addition:
       await member.add_roles(role)
 
-# COMMANDS
+""" COMMANDS """
 @commands.command(brief="about poio", description="")
 async def about(ctx):
 
@@ -124,6 +133,7 @@ async def about(ctx):
 
   await ctx.send(embed=em)
 
+#socials
 @commands.command(brief="official website link", description="get a link to Rooster Games official website")
 async def website(ctx):
   await ctx.send("<https://roostergamesclub.github.io/Site/index.html>")
@@ -131,6 +141,86 @@ async def website(ctx):
 @commands.command(brief="github link", description="get a link to Rooster Games official github organization")
 async def github(ctx):
   await ctx.send("<https://github.com/RoosterGamesClub>")
+
+@commands.command(brief="linkedin link", description="get a link to Rooster Games official linkedin company profile")
+async def linkedin(ctx):
+  await ctx.send("<https://www.linkedin.com/company/rooster-games-devclub/about/>")
+
+@commands.command(brief="x (twitter) link", description="get a link to Rooster Games official x account")
+async def x(ctx):
+  await ctx.send("<https://twitter.com/RoosterGamesUaa>")
+
+@commands.command(brief="youtube link", description="get a link to Rooster Games official youtube channel")
+async def youtube(ctx):
+  await ctx.send("<https://www.youtube.com/channel/UCEti3QAC17BPa1MzS4moV5w>")
+
+@commands.command(brief="instagram link", description="get a link to Rooster Games official instagram profile")
+async def instagram(ctx):
+  await ctx.send("<https://www.instagram.com/rooster.games/>")
+
+@commands.command(brief="social accounts links", description="get a list of all Rooster Games social accounts")
+async def socials(ctx):
+  title_ = "Rooster Games Socials"
+
+  url_ = "https://roostergamesclub.github.io/Site/index.html"
+
+  description_ = ""
+  description_ += "\n**GitHub: **[RoosterGamesClub](https://github.com/RoosterGamesClub)"
+  description_ += "\n**LinkedIn: **[Rooster Games](https://www.linkedin.com/company/rooster-games-devclub/about/)"
+  description_ += "\n**X (twitter): **[@RoosterGamesUaa](https://twitter.com/RoosterGamesUaa)"
+  description_ += "\n**YouTube: **[@RoosterGamesClub](https://www.youtube.com/channel/UCEti3QAC17BPa1MzS4moV5w)"
+  description_ += "\n**Instagram: **[rooster.games](https://www.instagram.com/rooster.games/)"
+
+  em = discord.Embed(title=title_, url=url_, description=description_, color=MAIN_COLOR)
+
+  await ctx.send(embed=em)
+
+#desitions
+@commands.command(brief="create a poll", description="create a poll specifying <title> <option n> <option n + 1>...")
+async def poll(ctx, title, *options):
+
+  reactions = ["🍎", "🍊","🍇", "🥑", "🍞", "🧅", "🥚", "🌶️", "🥦", "🧀"]
+
+  if len(options) == 0:
+    await ctx.send(f"define at least 1 option")
+    return
+  elif len(options) > 10:
+    await ctx.send(f"define at most {len(reactions)} options")
+    return
+
+  description_ = ""
+
+  emojis = []
+
+  for i, option in enumerate(options):
+    emoji = reactions.pop(random.randint(0, len(reactions) - 1))
+    
+    emojis.append(emoji)
+
+    description_ += f"\n{emoji} - {option}"
+
+  em = discord.Embed(title=title, description=description_, color=MAIN_COLOR)
+
+  message = await ctx.send(embed=em)
+
+  for i in range(len(options)):
+    await message.add_reaction(emojis[i])
+
+@commands.command(brief="random boolean", description="get a random boolean")
+async def boolean(ctx):
+  value = random.randint(0, 99) > 50
+
+  await ctx.send(f"{value}")
+
+@commands.command(brief="random integer", description="get a random integer")
+async def integer(ctx, lower_limit = 10, upper_limit = 0):
+  
+  if lower_limit > upper_limit:
+    temp = upper_limit
+    upper_limit = lower_limit
+    lower_limit = temp
+
+  await ctx.send(f"{random.randint(lower_limit, upper_limit)}")
 
 # ADMIN COMMANDS
 def is_admin(guild : discord.guild, member : discord.Member) -> bool:
