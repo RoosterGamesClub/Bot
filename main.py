@@ -36,7 +36,9 @@ async def on_ready():
   bot.add_command(genrerol)
 
   print("loading user commands...")
-  bot.add_command(site)
+  bot.add_command(about)
+  bot.add_command(website)
+  bot.add_command(github)
 
   print("---------------------------------------------")
 
@@ -107,13 +109,28 @@ async def set_role(guild : discord.guild, member : discord.Member, role_name : s
       await member.add_roles(role)
 
 # COMMANDS
-@commands.command(brief="check out the site", description="get a link to Rooster Games site")
-async def site(ctx):
-  em = discord.Embed(type="link", title="RoosterGames Site", url="https://roostergamesclub.github.io/Site/index.html", description="")
+@commands.command(brief="about poio", description="")
+async def about(ctx):
 
-  em.set_image(url="attachment://RoosterGamesSite.png")
+  title_ = "**Líder Supremo**"
+
+  url_ = "https://roostergamesclub.github.io/Site/pollo.html"
+
+  description_ = ""
+  description_ += "Aunque solo me vean en la pantalla, soy un miembro activo del equipo y el **líder supremo**. Confío plenamente en cada uno de los miembros del Club para crear juegos increíbles, ya que son talentosos y comprometidos"
+  description_ += "\n\nContribuye a mi desarrollo [aquí](https://github.com/RoosterGamesClub/Bot)"
+
+  em = discord.Embed(title=title_, url=url_, description=description_, color=MAIN_COLOR)
 
   await ctx.send(embed=em)
+
+@commands.command(brief="official website link", description="get a link to Rooster Games official website")
+async def website(ctx):
+  await ctx.send("<https://roostergamesclub.github.io/Site/index.html>")
+
+@commands.command(brief="github link", description="get a link to Rooster Games official github organization")
+async def github(ctx):
+  await ctx.send("<https://github.com/RoosterGamesClub>")
 
 # ADMIN COMMANDS
 def is_admin(guild : discord.guild, member : discord.Member) -> bool:
@@ -122,7 +139,7 @@ def is_admin(guild : discord.guild, member : discord.Member) -> bool:
   if admin_role in member.roles:
     return True
 
-@commands.command(hide=True)
+@commands.command(hidden=True)
 async def genrerol(ctx : commands.Context):
 
   if not is_admin(ctx.guild, ctx.message.author):
@@ -139,7 +156,7 @@ async def genrerol(ctx : commands.Context):
   description_ += "\n\n**----------  Hobbies ----------**\n"
   description_ += "\n> 🕹️ para **Gaming**"
 
-  em = discord.Embed(title="Obten tus roles", description=description_)
+  em = discord.Embed(title="Obten tus roles", description=description_, color=MAIN_COLOR)
   
   channel = await bot.fetch_channel(REROL_CHANNEL_ID)
 
@@ -154,7 +171,7 @@ async def genrerol(ctx : commands.Context):
   await message.add_reaction("🕹️")
 
 # DEVELOPER COMMANDS
-@commands.command(hide=True, brief="pong", description="test for correct bot connection")
+@commands.command(hidden=True, brief="pong", description="test for correct bot connection")
 async def ping(ctx):
   await ctx.send("pong")
 
