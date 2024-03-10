@@ -4,19 +4,14 @@ from discord.ext import commands
 import utils_other 
 import random
 
-import os
-from dotenv import load_dotenv
+####### Settings ########
+from settings import COMMAND_PREFIX, WELCOME_CHANNEL_ID, MAIN_COLOR, REROL_MESSAGE_ID, REROL_CHANNEL_ID, DISCORD_TOKEN
 
-load_dotenv(override=True)
+####### Commands ########
+import helpCommand
 
-######## CONFIGS ########
-DISCORD_TOKEN   = os.getenv("DISCORD_TOKEN")
-COMMAND_PREFIX  = os.getenv("COMMAND_PREFIX")
-MAIN_COLOR = utils_other.getDiscordColorFromString(os.getenv("MAIN_COLOR"))
-WELCOME_CHANNEL_ID = os.getenv("WELCOME_CHANNEL_ID")
-
-REROL_MESSAGE_ID = os.getenv("REROL_MESSAGE_ID")
-REROL_CHANNEL_ID = os.getenv("REROL_CHANNEL_ID")
+########## Cogs #########
+import infoCog
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -37,18 +32,14 @@ async def on_ready():
   bot.add_command(genrerol)
 
   print("loading user commands...")
-  bot.add_command(about)
-  bot.add_command(website)
-  bot.add_command(github)
-  bot.add_command(linkedin)
-  bot.add_command(x)
-  bot.add_command(instagram)
-  bot.add_command(socials)
-
   bot.add_command(poll)
   bot.add_command(boolean)
   bot.add_command(integer)
 
+  bot.help_command = helpCommand.CustomHelpCommand()
+
+  print("--------------   loading cogs   --------------")
+  await bot.add_cog(infoCog.InfoCog(bot))
   print("---------------------------------------------")
 
 # WELCOME MESSAGE
@@ -118,64 +109,7 @@ async def set_role(guild : discord.guild, member : discord.Member, role_name : s
       await member.add_roles(role)
 
 """ COMMANDS """
-@commands.command(brief="about poio", description="")
-async def about(ctx):
-
-  title_ = "**Líder Supremo**"
-
-  url_ = "https://roostergamesclub.github.io/Site/pollo.html"
-
-  description_ = ""
-  description_ += "Aunque solo me vean en la pantalla, soy un miembro activo del equipo y el **líder supremo**. Confío plenamente en cada uno de los miembros del Club para crear juegos increíbles, ya que son talentosos y comprometidos"
-  description_ += "\n\nContribuye a mi desarrollo [aquí](https://github.com/RoosterGamesClub/Bot)"
-
-  em = discord.Embed(title=title_, url=url_, description=description_, color=MAIN_COLOR)
-
-  await ctx.send(embed=em)
-
-#socials
-@commands.command(brief="official website link", description="get a link to Rooster Games official website")
-async def website(ctx):
-  await ctx.send("<https://roostergamesclub.github.io/Site/index.html>")
-
-@commands.command(brief="github link", description="get a link to Rooster Games official github organization")
-async def github(ctx):
-  await ctx.send("<https://github.com/RoosterGamesClub>")
-
-@commands.command(brief="linkedin link", description="get a link to Rooster Games official linkedin company profile")
-async def linkedin(ctx):
-  await ctx.send("<https://www.linkedin.com/company/rooster-games-devclub/about/>")
-
-@commands.command(brief="x (twitter) link", description="get a link to Rooster Games official x account")
-async def x(ctx):
-  await ctx.send("<https://twitter.com/RoosterGamesUaa>")
-
-@commands.command(brief="youtube link", description="get a link to Rooster Games official youtube channel")
-async def youtube(ctx):
-  await ctx.send("<https://www.youtube.com/channel/UCEti3QAC17BPa1MzS4moV5w>")
-
-@commands.command(brief="instagram link", description="get a link to Rooster Games official instagram profile")
-async def instagram(ctx):
-  await ctx.send("<https://www.instagram.com/rooster.games/>")
-
-@commands.command(brief="social accounts links", description="get a list of all Rooster Games social accounts")
-async def socials(ctx):
-  title_ = "Rooster Games Socials"
-
-  url_ = "https://roostergamesclub.github.io/Site/index.html"
-
-  description_ = ""
-  description_ += "\n**GitHub: **[RoosterGamesClub](https://github.com/RoosterGamesClub)"
-  description_ += "\n**LinkedIn: **[Rooster Games](https://www.linkedin.com/company/rooster-games-devclub/about/)"
-  description_ += "\n**X (twitter): **[@RoosterGamesUaa](https://twitter.com/RoosterGamesUaa)"
-  description_ += "\n**YouTube: **[@RoosterGamesClub](https://www.youtube.com/channel/UCEti3QAC17BPa1MzS4moV5w)"
-  description_ += "\n**Instagram: **[rooster.games](https://www.instagram.com/rooster.games/)"
-
-  em = discord.Embed(title=title_, url=url_, description=description_, color=MAIN_COLOR)
-
-  await ctx.send(embed=em)
-
-#desitions
+# UTILITY COMMANDS
 @commands.command(brief="create a poll", description="create a poll specifying <title> <option n> <option n + 1>...")
 async def poll(ctx, title, *options):
 
@@ -264,7 +198,5 @@ async def genrerol(ctx : commands.Context):
 @commands.command(hidden=True, brief="pong", description="test for correct bot connection")
 async def ping(ctx):
   await ctx.send("pong")
-
-
 
 bot.run(DISCORD_TOKEN)
