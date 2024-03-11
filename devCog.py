@@ -71,3 +71,13 @@ class DevCog(commands.Cog, name="Dev"):
     em = discord.Embed(title=title_, description=description_, color=MAIN_COLOR)
         
     await ctx.send(embed=em)
+
+  @commands.command(brief="report a bug", description="")
+  async def bug(self, ctx, description : str):
+    with open("bugs.txt", "r") as file:
+      bug_number = len(file.readlines()) + 1
+
+    with open("bugs.txt", "a") as file:
+      file.write(f"\n{bug_number}.\t [{ctx.message.created_at}] by {ctx.message.author.display_name} (user ID: {ctx.message.author.id}) \treport: {description}")
+
+    await ctx.send(f"> bug logged as `#{bug_number}`")
