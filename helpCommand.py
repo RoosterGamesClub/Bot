@@ -32,7 +32,7 @@ class CustomHelpCommand(commands.HelpCommand):
 
     desciption_ += self.help_usage_str
 
-    em = discord.Embed(title="All commands", description=desciption_, color=MAIN_COLOR)
+    em = discord.Embed(title="", description=desciption_, color=MAIN_COLOR)
 
     channel = self.get_destination()
     await channel.send(embed=em)
