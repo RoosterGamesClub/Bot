@@ -63,7 +63,7 @@ class DevCog(commands.Cog, name="Dev"):
     description_ = "```" 
     
     with open("Poio.log", "r") as log_file:
-      for line in (log_file.readlines() [-lines:]):
+      for line in (log_file.readlines()[-lines:]):
         description_ += line
 
     description_ += "```"
@@ -72,7 +72,7 @@ class DevCog(commands.Cog, name="Dev"):
         
     await ctx.send(embed=em)
 
-  @commands.command(brief="report a bug", description="")
+  @commands.command(brief="report a bug", description="log a bug for fixing, the description should be enclose in \" \" for example: `!bug \"not working!\"`")
   async def bug(self, ctx, description : str):
     with open("bugs.txt", "r") as file:
       bug_number = len(file.readlines()) + 1

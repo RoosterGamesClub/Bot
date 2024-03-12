@@ -39,7 +39,12 @@ botLogger.addHandler(handler)
 DISCORD_TOKEN   = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX  = os.getenv("COMMAND_PREFIX")
 MAIN_COLOR = utils_other.getDiscordColorFromString(os.getenv("MAIN_COLOR"))
+
+GUILD_ID = os.getenv("GUILD_ID")
+
 WELCOME_CHANNEL_ID = os.getenv("WELCOME_CHANNEL_ID")
 
 REROL_MESSAGE_ID = os.getenv("REROL_MESSAGE_ID")
 REROL_CHANNEL_ID = os.getenv("REROL_CHANNEL_ID")
+
+NEWS_CHANNEL_ID = os.getenv("NEWS_CHANNEL_ID")

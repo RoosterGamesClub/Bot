@@ -1,13 +1,17 @@
+import os
+
 import logging
 
 import random
-
 
 import discord
 from discord.ext import commands
 
 ####### Settings ########
 from settings import COMMAND_PREFIX, WELCOME_CHANNEL_ID, MAIN_COLOR, REROL_MESSAGE_ID, REROL_CHANNEL_ID, DISCORD_TOKEN
+
+#######   Tasks  ########
+from birthdayTask import birthdayNotification
 
 ####### Commands ########
 import helpCommand
@@ -23,9 +27,15 @@ intents.reactions = True
 
 bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 
+main_logger = logging.getLogger("bot.main")
+
 @bot.event
 async def on_ready():
-  main_logger = logging.getLogger("bot")
+
+  main_logger.log(logging.INFO, "--------------   loading tasks  --------------")
+
+  main_logger.log(logging.INFO, "starting birthday notification tasks...")
+  birthdayNotification.start(bot)
 
   main_logger.log(logging.INFO, "-------------- loading commands --------------")
 
@@ -52,25 +62,35 @@ async def on_ready():
 # WELCOME MESSAGE
 @bot.event
 async def on_member_join(member):
+  main_logger.log(logging.INFO, f"on_member_join event (member ID: {member.id}) (member NAME: {member.display_name})")
+
   channel = await member.guild.fetch_channel(WELCOME_CHANNEL_ID)
 
   if channel == None:
-    print(member.guild)
-    print(f"welcome channel {WELCOME_CHANNEL_ID} not found...")
+    main_logger.log(logging.DEBUG, f"WELCOME_CHANNEL {WELCOME_CHANNEL_ID} not found... check .env file configuration")
     return
   
   description_= ""
   description_ += f"**¡Bienvenido {member.mention} a Rooster Games!**"
-  #description_ += f"\n\n¡Estamos emocionados de darte la bienvenida a nuestra comunidad dedicada al desarrollo de videojuegos! En Rooster Games, nos apasiona la creación de experiencias únicas y emocionantes para todo el mundo. 🌍🎮"
+  description_ += f"\n\n¡Estamos emocionados de darte la bienvenida a nuestra comunidad dedicada al desarrollo de videojuegos! En Rooster Games, nos apasiona la creación de experiencias únicas y emocionantes para todo el mundo. 🌍🎮"
   description_ += f"\n\nEste Discord es tu espacio para conectarte con otros miembros del club, compartir tus proyectos, recibir retroalimentación valiosa y colaborar en nuevas ideas. Ya seas un desarrollador novato o un veterano en la industria, aquí encontrarás un ambiente acogedor donde tu creatividad puede prosperar. 🚀💡"
-  #description_ += f"\n\nÚnete a nuestras discusiones, participa en eventos especiales y sé parte de una comunidad apasionada que comparte tu amor por los videojuegos. En Rooster Games, cada miembro es una pieza vital de nuestro equipo, ¡y esperamos ver tus ideas brillar! 💬✨"
+  description_ += f"\n\nÚnete a nuestras discusiones, participa en eventos especiales y sé parte de una comunidad apasionada que comparte tu amor por los videojuegos. En Rooster Games, cada miembro es una pieza vital de nuestro equipo, ¡y esperamos ver tus ideas brillar! 💬✨"
   description_ += f"\n\n¡Bienvenido a Rooster Games, donde los sueños de los videojuegos toman vuelo! 🐓🎮"
+
+  #get a random file from img/welcome/ folder
+  file_list = os.listdir("./img/welcome")
+  
+  file_name = file_list[random.randint(0, len(file_list) -1)]
+
+  file_path = f"./img/welcome/{file_name}"
+
+  file = discord.File(file_path)
 
   em = discord.Embed(title="", description=description_, color=MAIN_COLOR)
 
-  em.set_image(url="https://i.pinimg.com/originals/ca/04/53/ca04538e846d9d7f11e56c9bc6e57acb.gif")
+  em.set_image(url=f"attachment://{file_name}")
 
-  await channel.send(embed=em)
+  await channel.send(file=file, embed=em)
 
 # RE-ROL MESSAGE
 @bot.event
@@ -82,19 +102,19 @@ async def on_raw_reaction_remove(payload : discord.RawReactionActionEvent):
   await on_raw_reaction_event(payload, False)
 
 async def on_raw_reaction_event(payload : discord.RawReactionActionEvent, is_addition : bool):
-  print(f"raw reaction event, is_addition : {is_addition}")
+  #print(f"raw reaction event, is_addition : {is_addition}")
 
   if payload.message_id != int(REROL_MESSAGE_ID):
-    print(f"reacted on untracked message {payload.message_id}")
+    #print(f"reacted on untracked message {payload.message_id}")
     return
-  
+
   guild = await bot.fetch_guild(payload.guild_id)
   member = await guild.fetch_member(payload.user_id)
   #channel = await guild.fetch_channel(payload.channel_id)
   #message = await channel.fetch_message(payload.message_id)
   emoji = payload.emoji
 
-  print(f"reacted on re-rol message. reaction name : {emoji.name}")
+  main_logger.log(logging.INFO, f"on_raw_reaction event (member ID: {member.id}) (member NAME: {member.display_name}) (reaction: {emoji})")
 
   if emoji.name == "🎲": await set_role(guild, member, "GameDesign", is_addition)
   if emoji.name == "⚙️": await set_role(guild, member, "Programming", is_addition)
@@ -120,12 +140,17 @@ async def set_role(guild : discord.guild, member : discord.Member, role_name : s
 @commands.command(brief="create a poll", description="create a poll specifying <title> <option n> <option n + 1>...")
 async def poll(ctx, title, *options):
 
-  reactions = ["🍎", "🍊","🍇", "🥑", "🍞", "🧅", "🥚", "🌶️", "🥦", "🧀"]
+  reactions = ["🍎", "🍊","🍇", "🥑", "🍞", "🧅", "🥚", "🌶️", "🥦", "🧀", "🥓", "🍓", "🫐", "🍿", "🍪", "🍭", "🍬"]
 
   if len(options) == 0:
-    await ctx.send(f"define at least 1 option")
+    em = discord.Embed(title=title, color=MAIN_COLOR)
+    message = await ctx.send(embed=em)
+    
+    await message.add_reaction("👍")
+    await message.add_reaction("👎")
+
     return
-  elif len(options) > 10:
+  elif len(options) > 12:
     await ctx.send(f"define at most {len(reactions)} options")
     return
 
