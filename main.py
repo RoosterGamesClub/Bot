@@ -8,7 +8,9 @@ import discord
 from discord.ext import commands
 
 ####### Settings ########
-from settings import COMMAND_PREFIX, WELCOME_CHANNEL_ID, MAIN_COLOR, REROL_MESSAGE_ID, REROL_CHANNEL_ID, DISCORD_TOKEN
+from settings import COMMAND_PREFIX, WELCOME_CHANNEL_ID, MAIN_COLOR, REROL_MESSAGE_ID, REROL_CHANNEL_ID, DISCORD_TOKEN, GUILD_ID
+
+import loggingUtils
 
 #######   Tasks  ########
 from birthdayTask import birthdayNotification
@@ -44,9 +46,13 @@ async def on_ready():
 
   main_logger.log(logging.INFO, "loading user commands...")
   bot.add_command(poll)
-  bot.add_command(boolean)
-  bot.add_command(integer)
+  # bot.add_command(boolean)
+  # bot.add_command(integer)
 
+  main_logger.log(logging.INFO, "loading dev commands...")
+  bot.add_command(sync)
+
+  main_logger.log(logging.INFO, "loading custom help commnd...")
   bot.help_command = helpCommand.CustomHelpCommand()
 
   main_logger.log(logging.INFO, "--------------   loading cogs   --------------")
@@ -70,7 +76,7 @@ async def on_member_join(member):
     main_logger.log(logging.DEBUG, f"WELCOME_CHANNEL {WELCOME_CHANNEL_ID} not found... check .env file configuration")
     return
   
-  description_= ""
+  description_ = ""
   description_ += f"**¡Bienvenido {member.mention} a Rooster Games!**"
   description_ += f"\n\n¡Estamos emocionados de darte la bienvenida a nuestra comunidad dedicada al desarrollo de videojuegos! En Rooster Games, nos apasiona la creación de experiencias únicas y emocionantes para todo el mundo. 🌍🎮"
   description_ += f"\n\nEste Discord es tu espacio para conectarte con otros miembros del club, compartir tus proyectos, recibir retroalimentación valiosa y colaborar en nuevas ideas. Ya seas un desarrollador novato o un veterano en la industria, aquí encontrarás un ambiente acogedor donde tu creatividad puede prosperar. 🚀💡"
@@ -172,13 +178,13 @@ async def poll(ctx, title, *options):
   for i in range(len(options)):
     await message.add_reaction(emojis[i])
 
-@commands.command(brief="random boolean", description="get a random boolean")
+@bot.hybrid_command(name="boolean", brief="random boolean", description="get a random boolean")
 async def boolean(ctx):
   value = random.randint(0, 99) > 50
 
   await ctx.send(f"{value}")
 
-@commands.command(brief="random integer", description="get a random integer")
+@bot.hybrid_command(brief="random integer", description="get a random integer")
 async def integer(ctx, lower_limit = 10, upper_limit = 0):
   
   if lower_limit > upper_limit:
@@ -225,5 +231,26 @@ async def genrerol(ctx : commands.Context):
   await message.add_reaction("🔊")
   await message.add_reaction("📚")
   await message.add_reaction("🕹️")
+
+# GOD COMMANDS (only for devs)
+@commands.command(hidden=True, brief="sync commands", description="sync the current app command tree")
+async def sync(ctx):
+  loggingUtils.log_command_call(main_logger, ctx)
+
+  devs_discords_user_id = [
+    
+    334016584093794305, # wissens 
+  
+  ]
+
+  if not ctx.author.id in devs_discords_user_id:
+    main_logger.log(logging.INFO, f"access denied for user {ctx.author.display_name} (member ID: {ctx.author.id}) when running sync command")
+    await ctx.send("sorry, you have no permision to run !sync command")
+    return
+
+  await bot.tree.sync() #guild = discord.Object(id = GUILD_ID)  
+  await ctx.send("syncing commands...")
+
+  main_logger.log(logging.INFO, f"synced slash commands for {bot.user}")
 
 bot.run(DISCORD_TOKEN)

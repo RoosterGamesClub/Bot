@@ -19,7 +19,7 @@ class InfoCog(commands.Cog, name="Info"):
   async def cog_before_invoke(self, ctx):
     loggingUtils.log_command_call(self.logger, ctx)
 
-  @commands.command(brief="about poio", description="get to know a little bit about Poio and how to contribute")
+  @commands.hybrid_command(brief="about poio", description="get to know a little bit about Poio and how to contribute")
   async def about(self, ctx):
 
     title_ = "**Líder Supremo**"
@@ -34,31 +34,31 @@ class InfoCog(commands.Cog, name="Info"):
 
     await ctx.send(embed=em)
 
-  @commands.command(brief="official website link", description="get a link to Rooster Games official website")
+  @commands.hybrid_command(brief="official website link", description="get a link to Rooster Games official website")
   async def website(self, ctx):
     await ctx.send("> <https://roostergamesclub.github.io/Site/index.html>")
 
-  @commands.command(brief="github link", description="get a link to Rooster Games official github organization")
+  @commands.hybrid_command(brief="github link", description="get a link to Rooster Games official github organization")
   async def github(self, ctx):
     await ctx.send("> <https://github.com/RoosterGamesClub>")
 
-  @commands.command(brief="linkedin link", description="get a link to Rooster Games official linkedin company profile")
+  @commands.hybrid_command(brief="linkedin link", description="get a link to Rooster Games official linkedin company profile")
   async def linkedin(self, ctx):
     await ctx.send("> <https://www.linkedin.com/company/rooster-games-devclub/about/>")
 
-  @commands.command(brief="x (twitter) link", description="get a link to Rooster Games official x account")
+  @commands.hybrid_command(brief="x (twitter) link", description="get a link to Rooster Games official x account")
   async def x(self, ctx):
     await ctx.send("> <https://twitter.com/RoosterGamesUaa>")
 
-  @commands.command(brief="youtube link", description="get a link to Rooster Games official youtube channel")
+  @commands.hybrid_command(brief="youtube link", description="get a link to Rooster Games official youtube channel")
   async def youtube(self, ctx):
     await ctx.send("> <https://www.youtube.com/channel/UCEti3QAC17BPa1MzS4moV5w>")
 
-  @commands.command(brief="instagram link", description="get a link to Rooster Games official instagram profile")
+  @commands.hybrid_command(brief="instagram link", description="get a link to Rooster Games official instagram profile")
   async def instagram(self, ctx):
     await ctx.send("> <https://www.instagram.com/rooster.games/>")
 
-  @commands.command(brief="social accounts links", description="get a list of all Rooster Games social accounts")
+  @commands.hybrid_command(brief="social accounts links", description="get a list of all Rooster Games social accounts")
   async def socials(self, ctx):
     title_ = "Rooster Games Socials"
 
