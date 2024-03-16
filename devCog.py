@@ -9,6 +9,7 @@ from discord.ext import commands
 import git
 
 import loggingUtils
+import otherUtils
 
 from settings import MAIN_COLOR
 
@@ -28,7 +29,7 @@ class DevCog(commands.Cog, name="Dev"):
   async def ping(self, ctx):
     await ctx.send(f"pong! {int(round(self.bot.latency, 3) * 1000)}ms")
 
-  @commands.hybrid_command(brief="last commits", description="get a list of all the recent improvements, new features and bug fixes done to naota")
+  @commands.hybrid_command(brief="last commits", description="get a list of all the recent improvements, new features and bug fixes done to poio")
   async def changelog(self, ctx):
     # obtain the log from local repo
     repo = git.Repo(os.getcwd())
@@ -81,3 +82,17 @@ class DevCog(commands.Cog, name="Dev"):
       file.write(f"\n{bug_number}.\t [{ctx.message.created_at}] by {ctx.message.author.display_name} (user ID: {ctx.message.author.id}) \treport: {description}")
 
     await ctx.send(f"> bug logged as `#{bug_number}`")
+
+  # GOD COMMANDS (only for devs)
+  @commands.command(hidden=True, brief="sync commands", description="sync the current app command tree")
+  async def sync(self, ctx):
+
+    if not otherUtils.isDev(ctx.author):
+      self.logger.log(logging.INFO, f"access denied for user {ctx.author.display_name} (member ID: {ctx.author.id}) when running sync command")
+      await ctx.send("sorry, you have no permision to run !sync command")
+      return
+
+    await self.bot.tree.sync() #guild = discord.Object(id = GUILD_ID)  
+    await ctx.send("syncing commands...")
+
+    self.logger.log(logging.INFO, f"synced slash commands for {self.bot.user}")

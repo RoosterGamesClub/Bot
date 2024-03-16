@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 
 def getDiscordColorFromString(color_str : str):
   if color_str == "" or color_str == "random":
@@ -37,3 +38,18 @@ def getDiscordColorFromString(color_str : str):
   if color_str == "pink": return discord.Color.pink()
   
   return discord.Color.from_str(color_str)
+
+def isAdmin(guild : discord.guild, member : discord.Member) -> bool:
+  admin_role = discord.utils.get(guild.roles, name="silkie chicken")
+
+  if admin_role in member.roles:
+    return True
+  
+def isDev(member: discord.Member):
+  devs_discords_user_id = [
+      
+    334016584093794305, # wissens 
+  
+  ]
+
+  return member.id in devs_discords_user_id

@@ -4,7 +4,7 @@ import logging.handlers
 import os
 from dotenv import load_dotenv
 
-import utils_other
+import otherUtils
 
 load_dotenv(override=True)
 
@@ -38,7 +38,7 @@ botLogger.addHandler(handler)
 
 DISCORD_TOKEN   = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX  = os.getenv("COMMAND_PREFIX")
-MAIN_COLOR = utils_other.getDiscordColorFromString(os.getenv("MAIN_COLOR"))
+MAIN_COLOR = otherUtils.getDiscordColorFromString(os.getenv("MAIN_COLOR"))
 
 GUILD_ID = os.getenv("GUILD_ID")
 
