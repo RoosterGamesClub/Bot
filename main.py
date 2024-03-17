@@ -47,7 +47,7 @@ async def on_ready():
   #bot.add_command(genrerol)
 
   main_logger.log(logging.INFO, "loading user commands...")
-  bot.add_command(poll)
+  # bot.add_command(poll)
   # bot.add_command(boolean)
   # bot.add_command(integer)
 
@@ -148,21 +148,41 @@ async def set_role(guild : discord.guild, member : discord.Member, role_name : s
 
 """ COMMANDS """
 # UTILITY COMMANDS
-@commands.command(brief="create a poll", description="create a poll specifying <title> <option n> <option n + 1>...")
-async def poll(ctx, title, *options):
+@bot.hybrid_command(brief="create a poll", description="create a poll specifying <title> <option n> <option n + 1>")
+async def poll(ctx : commands.context, title : str, option_1 = "", option_2 = "", option_3 = "", option_4 = "", option_5 = "", option_6 = "", option_7 = "", option_8 = "", option_9 = "", option_10 = "", is_official_poll = False):
+
+  # fugly hack because slash commands don't support *args parameters
+  # ----------------------------------------------------------------
+  options = []
+
+  if option_1 : options.append(option_1)
+  if option_2 : options.append(option_2)
+  if option_3 : options.append(option_3)
+  if option_4 : options.append(option_3)
+  if option_5 : options.append(option_3)
+  if option_6 : options.append(option_3)
+  if option_7 : options.append(option_3)
+  if option_8 : options.append(option_3)
+  if option_9 : options.append(option_3)
+  if option_10 : options.append(option_3)
+  # ----------------------------------------------------------------
 
   reactions = ["🍎", "🍊","🍇", "🥑", "🍞", "🧅", "🥚", "🌶️", "🥦", "🧀", "🥓", "🍓", "🫐", "🍿", "🍪", "🍭", "🍬"]
 
+  em = discord.Embed(title=title, color=MAIN_COLOR)
+
+  if otherUtils.isAdmin(ctx.guild, ctx.author) and is_official_poll:
+    em.set_author(name="by Rooster Games")
+
   if len(options) == 0:
-    em = discord.Embed(title=title, color=MAIN_COLOR)
     message = await ctx.send(embed=em)
     
     await message.add_reaction("👍")
     await message.add_reaction("👎")
 
     return
-  elif len(options) > 12:
-    await ctx.send(f"define at most {len(reactions)} options")
+  elif len(options) > 10:
+    await ctx.send(f"define at most 10 options")
     return
 
   description_ = ""
@@ -176,7 +196,7 @@ async def poll(ctx, title, *options):
 
     description_ += f"\n{emoji} - {option}"
 
-  em = discord.Embed(title=title, description=description_, color=MAIN_COLOR)
+  em.description = description_
 
   message = await ctx.send(embed=em)
 

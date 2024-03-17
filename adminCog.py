@@ -12,7 +12,7 @@ import otherUtils
 
 def CreateAnouncementEmbed(titulo:str, description:str) -> discord.Embed: 
   em = discord.Embed(title=titulo, description=description, color=MAIN_COLOR)
-  em.set_author(name="Rooster Games", icon_url="")
+  em.set_author(name="by Rooster Games", icon_url="")
 
   return em
 
@@ -30,8 +30,8 @@ class AnouncementModal(discord.ui.Modal, title="Anuncio"):
       channel = interaction.channel
       await channel.send("news channel not found...")
 
-    await channel.send(embed=em)
-    await interaction.response.send_message(f"anouncement publish on {channel.mention}")
+    message = await channel.send(embed=em)
+    await interaction.response.send_message(f"[announcement]({message.jump_url}) publish on {channel.mention}")
 
   async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
     await interaction.response.send_message('Oops! Something went wrong.', ephemeral=True)
@@ -48,8 +48,10 @@ class AdminCog(commands.Cog, name="Admin"):
   async def cog_before_invoke(self, ctx):
     loggingUtils.log_command_call(self.logger, ctx) 
 
-  @app_commands.command(name="anouncement", description="create a new anouncement embed that will be sent to the news channel")
-  async def announcement(self, interaction : discord.Interaction):
+  @app_commands.command(name="announcement", description="create a new anouncement embed that will be sent to the news channel")
+  async def announcement_slash(self, interaction : discord.Interaction):
+    loggingUtils.log_slash_command_call(self.logger, interaction)
+    
     author = interaction.user
     
     if not otherUtils.isAdmin(interaction.guild, author):
@@ -74,8 +76,8 @@ class AdminCog(commands.Cog, name="Admin"):
       channel = ctx.channel
       await channel.send("news channel not found...")
 
-    await channel.send(embed=em)
-    await ctx.send(f"anouncement publish on {channel.mention}")
+    message = await channel.send(embed=em)
+    await ctx.send(f"[anouncement]({message.jump_url}) publish on {channel.mention}")
 
   @commands.command(hidden=True)
   async def genrerol(self, ctx : commands.Context):
