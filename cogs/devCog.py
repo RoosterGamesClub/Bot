@@ -8,8 +8,8 @@ from discord.ext import commands
 
 import git
 
-import loggingUtils
-import otherUtils
+import utils.loggingUtils
+import utils.otherUtils
 
 from settings import MAIN_COLOR
 
@@ -23,7 +23,7 @@ class DevCog(commands.Cog, name="Dev"):
     self.logger = logging.getLogger("bot.dev_cog")
 
   async def cog_before_invoke(self, ctx):
-    loggingUtils.log_command_call(self.logger, ctx) 
+    utils.loggingUtils.log_command_call(self.logger, ctx) 
 
   @commands.hybrid_command(brief="pong", description="test for correct bot connection")
   async def ping(self, ctx):
@@ -87,7 +87,7 @@ class DevCog(commands.Cog, name="Dev"):
   @commands.command(hidden=True, brief="sync commands", description="sync the current app command tree")
   async def sync(self, ctx):
 
-    if not otherUtils.isDev(ctx.author):
+    if not utils.otherUtils.isDev(ctx.author):
       self.logger.log(logging.INFO, f"access denied for user {ctx.author.display_name} (member ID: {ctx.author.id}) when running sync command")
       await ctx.send("sorry, you have no permision to run !sync command")
       return

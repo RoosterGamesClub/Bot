@@ -5,10 +5,10 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from settings import MAIN_COLOR, REROL_CHANNEL_ID, REROL_MESSAGE_ID, NEWS_CHANNEL_ID
+from settings import MAIN_COLOR, REROL_CHANNEL_ID, REROL_MESSAGE_ID, NEWS_CHANNEL_ID, RULES_CHANNEL_ID, RULES_MESSAGE_ID
 
-import loggingUtils
-import otherUtils
+import utils.loggingUtils
+import utils.otherUtils
 
 def CreateAnouncementEmbed(titulo:str, description:str) -> discord.Embed: 
   em = discord.Embed(title=titulo, description=description, color=MAIN_COLOR)
@@ -46,15 +46,15 @@ class AdminCog(commands.Cog, name="Admin"):
     self.logger = logging.getLogger("bot.admin_cog") 
 
   async def cog_before_invoke(self, ctx):
-    loggingUtils.log_command_call(self.logger, ctx) 
+    utils.loggingUtils.log_command_call(self.logger, ctx) 
 
   @app_commands.command(name="announcement", description="create a new anouncement embed that will be sent to the news channel")
   async def announcement_slash(self, interaction : discord.Interaction):
-    loggingUtils.log_slash_command_call(self.logger, interaction)
+    utils.loggingUtils.log_slash_command_call(self.logger, interaction)
     
     author = interaction.user
     
-    if not otherUtils.isAdmin(interaction.guild, author):
+    if not utils.otherUtils.isAdmin(interaction.guild, author):
       self.logger.log(logging.INFO, f"access denied for user {author.display_name} (member ID: {author.id}) when running anouncemnt (slash command) command")
       return
 
@@ -64,7 +64,7 @@ class AdminCog(commands.Cog, name="Admin"):
   async def announcement(self, ctx:commands.context, title:str, description:str):
     author = ctx.author
 
-    if not otherUtils.isAdmin(ctx.guild, author):
+    if not utils.otherUtils.isAdmin(ctx.guild, author):
       self.logger.log(logging.INFO, f"access denied for user {author.display_name} (member ID: {author.id}) when running anouncemnt (normal command) command")
       return
 
@@ -82,7 +82,7 @@ class AdminCog(commands.Cog, name="Admin"):
   @commands.command(hidden=True)
   async def genrerol(self, ctx : commands.Context):
 
-    if not otherUtils.isAdmin(ctx.guild, ctx.message.author):
+    if not utils.otherUtils.isAdmin(ctx.guild, ctx.message.author):
       return
 
     description_ = "Reacciona con el emoji adecuado para obtener tu rol"
@@ -104,7 +104,7 @@ class AdminCog(commands.Cog, name="Admin"):
     message = await channel.fetch_message(REROL_MESSAGE_ID)
 
     if message: 
-      message.edit(embed=em)
+      await message.edit(embed=em)
     else:
       message = await channel.send(embed=em)
 
@@ -115,3 +115,38 @@ class AdminCog(commands.Cog, name="Admin"):
     await message.add_reaction("🔊")
     await message.add_reaction("📚")
     await message.add_reaction("🕹️")
+
+  @commands.command(hidden=True)
+  async def genrules(self, ctx : commands.Context):
+    
+    if not utils.otherUtils.isAdmin(ctx.guild, ctx.message.author):
+      return
+
+    em = discord.Embed(title="Las reglas", color=MAIN_COLOR)
+
+    rules = [
+      "No faltar el respeto a los demás",
+      "No difundir odio",
+      "No xenofobia",
+      "No homofobia",
+      "No discriminación",
+      "Ser creativo"
+    ]
+
+    description_ = ""
+
+    for i in range(len(rules)):
+      description_ += f"\n{i + 1}. {rules[i]}"
+
+    em.description = description_
+
+    channel = await self.bot.fetch_channel(RULES_CHANNEL_ID)
+
+    message = await channel.fetch_message(RULES_MESSAGE_ID)
+
+    if message: 
+      await message.edit(embed=em)
+    else:
+      message = await channel.send(embed=em)
+
+    await message.add_reaction("✅")

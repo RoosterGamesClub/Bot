@@ -1,5 +1,7 @@
 /untracked
 /__pycache__
+cogs/__pycache__/
+utils/__pycache__/
 .env
 Poio.log
 bugs.txt

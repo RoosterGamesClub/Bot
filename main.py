@@ -10,8 +10,8 @@ from discord.ext import commands
 ####### Settings ########
 from settings import COMMAND_PREFIX, WELCOME_CHANNEL_ID, MAIN_COLOR, REROL_MESSAGE_ID, REROL_CHANNEL_ID, DISCORD_TOKEN, GUILD_ID
 
-import loggingUtils
-import otherUtils
+import utils.loggingUtils
+import utils.otherUtils
 
 #######   Tasks  ########
 from birthdayTask import birthdayNotification
@@ -20,9 +20,9 @@ from birthdayTask import birthdayNotification
 import helpCommand
 
 ########## Cogs #########
-import infoCog
-import devCog
-import adminCog
+import cogs.infoCog
+import cogs.devCog
+import cogs.adminCog
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -60,13 +60,13 @@ async def on_ready():
   main_logger.log(logging.INFO, "--------------   loading cogs   --------------")
 
   main_logger.log(logging.INFO, "loading info cog...")
-  await bot.add_cog(infoCog.InfoCog(bot))
+  await bot.add_cog(cogs.infoCog.InfoCog(bot))
 
   main_logger.log(logging.INFO, "loading dev cog...")
-  await bot.add_cog(devCog.DevCog(bot))
+  await bot.add_cog(cogs.devCog.DevCog(bot))
 
   main_logger.log(logging.INFO, "loading admin cog...")
-  await bot.add_cog(adminCog.AdminCog(bot))
+  await bot.add_cog(cogs.adminCog.AdminCog(bot))
 
   main_logger.log(logging.INFO, "----------------------------------------------")
 
@@ -171,7 +171,7 @@ async def poll(ctx : commands.context, title : str, option_1 = "", option_2 = ""
 
   em = discord.Embed(title=title, color=MAIN_COLOR)
 
-  if otherUtils.isAdmin(ctx.guild, ctx.author) and is_official_poll:
+  if utils.otherUtils.isAdmin(ctx.guild, ctx.author) and is_official_poll:
     em.set_author(name="by Rooster Games")
 
   if len(options) == 0:

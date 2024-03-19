@@ -4,7 +4,7 @@ import logging.handlers
 import os
 from dotenv import load_dotenv
 
-import otherUtils
+import utils.otherUtils
 
 load_dotenv(override=True)
 
@@ -38,7 +38,7 @@ botLogger.addHandler(handler)
 
 DISCORD_TOKEN   = os.getenv("DISCORD_TOKEN")
 COMMAND_PREFIX  = os.getenv("COMMAND_PREFIX")
-MAIN_COLOR = otherUtils.getDiscordColorFromString(os.getenv("MAIN_COLOR"))
+MAIN_COLOR = utils.otherUtils.getDiscordColorFromString(os.getenv("MAIN_COLOR"))
 
 GUILD_ID = os.getenv("GUILD_ID")
 
@@ -48,3 +48,6 @@ REROL_MESSAGE_ID = os.getenv("REROL_MESSAGE_ID")
 REROL_CHANNEL_ID = os.getenv("REROL_CHANNEL_ID")
 
 NEWS_CHANNEL_ID = os.getenv("NEWS_CHANNEL_ID")
+
+RULES_CHANNEL_ID = os.getenv("RULES_CHANNEL_ID")
+RULES_MESSAGE_ID = os.getenv("RULES_MESSAGE_ID")
