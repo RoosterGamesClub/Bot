@@ -10,18 +10,26 @@ from settings import MAIN_COLOR, REROL_CHANNEL_ID, REROL_MESSAGE_ID, NEWS_CHANNE
 import utils.loggingUtils
 import utils.otherUtils
 
-def CreateAnouncementEmbed(titulo:str, description:str) -> discord.Embed: 
+def CreateAnouncementEmbed(titulo:str, description:str, image_url:str, roles) -> discord.Embed: 
   em = discord.Embed(title=titulo, description=description, color=MAIN_COLOR)
   em.set_author(name="by Rooster Games", icon_url="")
+  em.set_image(url=image_url)
 
+  if roles:
+    em.description += "\n"
+
+    for rol in roles:
+      em.description += f"{rol.mention}"
+ 
   return em
 
 class AnouncementModal(discord.ui.Modal, title="Anuncio"):
   title_ = discord.ui.TextInput(label="Título", style=discord.TextStyle.short, placeholder="Viernes de Pizza!", required=True)
   description_ = discord.ui.TextInput(label="Descripción", style=discord.TextStyle.paragraph, placeholder="Va a ser peperoni con orilla de queso 🍕")
+  image_ = discord.ui.TextInput(label="Imagen", style=discord.TextStyle.short, placeholder="url de la imagen", required=False)
 
   async def on_submit(self, interaction: discord.Interaction):
-    em = CreateAnouncementEmbed(self.title_.value, self.description_.value)
+    em = CreateAnouncementEmbed(self.title_.value, self.description_.value, self.image_.value, None)
 
     # get the news channel
     channel = await interaction.guild.fetch_channel(NEWS_CHANNEL_ID)
@@ -61,14 +69,14 @@ class AdminCog(commands.Cog, name="Admin"):
     await interaction.response.send_modal(AnouncementModal())
 
   @commands.command(brief="announce an event", description="send an announcement embed with the title and description specified")
-  async def announcement(self, ctx:commands.context, title:str, description:str):
+  async def announcement(self, ctx:commands.context, title:str, description:str, image_url:str):
     author = ctx.author
 
     if not utils.otherUtils.isAdmin(ctx.guild, author):
       self.logger.log(logging.INFO, f"access denied for user {author.display_name} (member ID: {author.id}) when running anouncemnt (normal command) command")
       return
 
-    em = CreateAnouncementEmbed(title, description)
+    em = CreateAnouncementEmbed(title, description, image_url, None)
 
     channel = await ctx.guild.fetch_channel(NEWS_CHANNEL_ID)
 

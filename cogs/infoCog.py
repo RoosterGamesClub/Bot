@@ -1,4 +1,5 @@
 import logging
+import typing
 
 import discord
 from discord.ext import commands
@@ -18,6 +19,71 @@ class InfoCog(commands.Cog, name="Info"):
 
   async def cog_before_invoke(self, ctx):
     utils.loggingUtils.log_command_call(self.logger, ctx)
+
+  @commands.hybrid_command(brief="get stats for this server", description="get stats for the server or for individual members or commands")
+  async def stats(self, ctx : commands.Context, mention : typing.Union[discord.Member, discord.Role] = None):
+
+    em = discord.Embed(title="", description="", color=MAIN_COLOR)
+
+    if isinstance(mention, discord.Member):
+      em.set_author(name=f"\"{mention.display_name}\" stats", url="", icon_url=mention.display_avatar.url)
+    
+      em.description += f"\n**__Rooster desde__** \n{mention.joined_at.strftime('%Y-%m-%d')}"
+      
+      em.description += "\n\n**__Intereses__**"
+      for role in mention.roles:
+        #print(role.name)
+
+        if role.name == "@everyone": continue
+        if role.name == "silkie chicken": continue
+
+        em.description += f"\n{role.name}" 
+
+    elif isinstance(mention, discord.Role):
+      role = ctx.guild.get_role(mention.id)
+
+      em.description += f"> **miembros**: {len(role.members)}"
+    
+      em.description += "\n"
+      for i, member in enumerate(role.members):
+        if i > 5:
+          break
+
+        em.description += f"\n> {1+i}. {member.display_name}"
+
+    else:
+      em.title = "Rooster Games Stats"
+
+      em.description += f"\n**{len(ctx.guild.members)}** - Miembros"
+
+      programming_role = discord.utils.get(ctx.guild.roles,name="Programming")
+      gamedesing_role = discord.utils.get(ctx.guild.roles,name="GameDesign")
+      graphics_role = discord.utils.get(ctx.guild.roles,name="Graphics/Animation")
+      music_role = discord.utils.get(ctx.guild.roles,name="Music")
+      sound_role = discord.utils.get(ctx.guild.roles,name="SoundDesign/VoiceActing")
+      writting_role = discord.utils.get(ctx.guild.roles,name="Writing/NarrativeDesign")
+
+      em.description += "\n"
+
+      if programming_role:
+        em.description += f"\n**{len(programming_role.members)}** - Programadores"
+
+      if gamedesing_role:
+        em.description += f"\n**{len(gamedesing_role.members)}** - Game Designers"
+
+      if graphics_role:
+        em.description += f"\n**{len(graphics_role.members)}** - Artistas/Animadores"
+
+      if music_role:
+        em.description += f"\n**{len(music_role.members)}** - Músicos/Compositores "
+
+      if sound_role:
+        em.description += f"\n**{len(sound_role.members)}** - Actores de voz/Sound designers"
+
+      if writting_role:
+        em.description += f"\n**{len(writting_role.members)}** - Escritores"
+
+    await ctx.send(embed=em)
 
   @commands.hybrid_command(brief="about poio", description="get to know a little bit about Poio and how to contribute")
   async def about(self, ctx):
