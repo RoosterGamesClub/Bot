@@ -89,31 +89,40 @@ class AdminCog(commands.Cog, name="Admin"):
 
   @commands.command(hidden=True)
   async def genrerol(self, ctx : commands.Context):
+    
+    guild = ctx.guild
 
-    if not utils.otherUtils.isAdmin(ctx.guild, ctx.message.author):
+    if not utils.otherUtils.isAdmin(guild, ctx.message.author):
       return
 
+    he_emoji = utils.otherUtils.get_he_him_emoji(guild)
+    she_emoji = utils.otherUtils.get_she_her_emoji(guild)
+    they_emoji = utils.otherUtils.get_they_them_emoji(guild)
+
     description_ = "Reacciona con el emoji adecuado para obtener tu rol"
-    description_ += "\n\n**---------- Intereses ----------**\n"
-    description_ += "\n> 🎲 para **Game Design**"
-    description_ += "\n> ⚙️ para **Programming**"
-    description_ += "\n> 🎨 para **Graphics** o **Animation**"
-    description_ += "\n> 🎵 para **Music**"
-    description_ += "\n> 🔊 para **Sound Design** o **Voice Acting**"
-    description_ += "\n> 📚 para **Writing** o **Narrative Design**"
-    description_ += "\n\n**----------  Hobbies ----------**\n"
-    description_ += "\n> 🕹️ para **Gaming**"
+    description_ += f"\n\n**---------- Intereses ----------**\n"
+    description_ += f"\n> 🎲 para **Game Design**"
+    description_ += f"\n> ⚙️ para **Programming**"
+    description_ += f"\n> 🎨 para **Graphics** o **Animation**"
+    description_ += f"\n> 🎵 para **Music**"
+    description_ += f"\n> 🔊 para **Sound Design** o **Voice Acting**"
+    description_ += f"\n> 📚 para **Writing** o **Narrative Design**"
+    description_ += f"\n\n**----------  Hobbies ----------**\n"
+    description_ += f"\n> 🕹️ para **Gaming**"
+    description_ += f"\n\n**--------  Pronombres  --------**\n"
+    description_ += f"\n {they_emoji} para **They/Them**"
+    description_ += f"\n {she_emoji} para **She/Her**"
+    description_ += f"\n {he_emoji} para **He/Him**"
 
     em = discord.Embed(title="Obten tus roles", description=description_, color=MAIN_COLOR)
     
     channel = await self.bot.fetch_channel(REROL_CHANNEL_ID)
 
     # check if the message exists already, if it does we edit it, otherwise we create it for the first time
-    message = await channel.fetch_message(REROL_MESSAGE_ID)
-
-    if message: 
+    try:
+      message = await channel.fetch_message(REROL_MESSAGE_ID)
       await message.edit(embed=em)
-    else:
+    except discord.errors.NotFound:
       message = await channel.send(embed=em)
 
     await message.add_reaction("🎲")
@@ -123,6 +132,10 @@ class AdminCog(commands.Cog, name="Admin"):
     await message.add_reaction("🔊")
     await message.add_reaction("📚")
     await message.add_reaction("🕹️")
+    await message.add_reaction(they_emoji)
+    await message.add_reaction(she_emoji)
+    await message.add_reaction(he_emoji)
+    
 
   @commands.command(hidden=True)
   async def genrules(self, ctx : commands.Context):

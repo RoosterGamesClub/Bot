@@ -49,7 +49,17 @@ def isDev(member: discord.Member):
   devs_discords_user_id = [
       
     334016584093794305, # wissens 
-  
+
   ]
 
   return member.id in devs_discords_user_id
+
+# this emojis are custom so we gotta get them this way
+def get_he_him_emoji(guild : discord.Guild):
+  return discord.utils.get(guild.emojis, name="pronouns_he")
+
+def get_she_her_emoji(guild: discord.Guild):
+  return discord.utils.get(guild.emojis, name="pronouns_she")
+
+def get_they_them_emoji(guild: discord.Guild):
+  return discord.utils.get(guild.emojis, name="pronouns_they")

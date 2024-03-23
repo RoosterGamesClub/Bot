@@ -125,6 +125,11 @@ async def on_raw_reaction_event(payload : discord.RawReactionActionEvent, is_add
   #message = await channel.fetch_message(payload.message_id)
   emoji = payload.emoji
 
+  
+  he_emoji = utils.otherUtils.get_he_him_emoji(guild)
+  she_emoji = utils.otherUtils.get_she_her_emoji(guild)
+  they_emoji = utils.otherUtils.get_they_them_emoji(guild)
+
   main_logger.log(logging.INFO, f"on_raw_reaction event (member ID: {member.id}) (member NAME: {member.display_name}) (reaction: {emoji})")
 
   if emoji.name == "🎲": await set_role(guild, member, "GameDesign", is_addition)
@@ -135,6 +140,10 @@ async def on_raw_reaction_event(payload : discord.RawReactionActionEvent, is_add
   if emoji.name == "📚": await set_role(guild, member, "Writing/NarrativeDesign", is_addition)
 
   if emoji.name == "🕹️": await set_role(guild, member, "Gaming", is_addition)
+
+  if emoji == he_emoji: await set_role(guild, member, "He/Him", is_addition)
+  if emoji == she_emoji: await set_role(guild, member, "She/Her", is_addition)
+  if emoji == they_emoji: await set_role(guild, member, "They/Them", is_addition)
 
 async def set_role(guild : discord.guild, member : discord.Member, role_name : str, is_addition : bool):
   role = discord.utils.get(guild.roles, name=role_name)
