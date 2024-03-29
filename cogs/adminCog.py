@@ -110,9 +110,9 @@ class AdminCog(commands.Cog, name="Admin"):
     description_ += f"\n\n**----------  Hobbies ----------**\n"
     description_ += f"\n> 🕹️ para **Gaming**"
     description_ += f"\n\n**--------  Pronombres  --------**\n"
-    description_ += f"\n {they_emoji} para **They/Them**"
-    description_ += f"\n {she_emoji} para **She/Her**"
-    description_ += f"\n {he_emoji} para **He/Him**"
+    description_ += f"\n> {they_emoji} para **They/Them**"
+    description_ += f"\n> {she_emoji} para **She/Her**"
+    description_ += f"\n> {he_emoji} para **He/Him**"
 
     em = discord.Embed(title="Obten tus roles", description=description_, color=MAIN_COLOR)
     

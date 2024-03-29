@@ -140,3 +140,17 @@ class InfoCog(commands.Cog, name="Info"):
     em = discord.Embed(title=title_, url=url_, description=description_, color=MAIN_COLOR)
 
     await ctx.send(embed=em)
+
+  @commands.hybrid_command(brief="know our work", description="get a list of the projects we've build and/or are currently working on")
+  async def projects(self, ctx):
+    em = discord.Embed(title="", description="", color=MAIN_COLOR)
+
+    em.title = "Proyectos"
+
+    # em.description += "\n__Upcoming__"
+    # em.description += "\n"
+    em.description += "\nRed Hood"
+    em.description += "\nUaa Ascension"
+    em.description += "\nNatu"
+
+    await ctx.send(embed=em)

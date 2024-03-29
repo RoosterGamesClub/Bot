@@ -39,7 +39,9 @@ async def on_ready():
   main_logger.log(logging.INFO, "--------------   loading tasks  --------------")
 
   main_logger.log(logging.INFO, "starting birthday notification tasks...")
-  birthdayNotification.start(bot)
+  
+  if not birthdayNotification.is_running():
+    birthdayNotification.start(bot)
 
   main_logger.log(logging.INFO, "-------------- loading commands --------------")
 
@@ -102,6 +104,8 @@ async def on_member_join(member):
   em.set_image(url=f"attachment://{file_name}")
 
   await channel.send(file=file, embed=em)
+
+  await set_role(member.guild, member, "Aspirante", True)
 
 # RE-ROL MESSAGE
 @bot.event
