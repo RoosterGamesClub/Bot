@@ -40,6 +40,8 @@ class InfoCog(commands.Cog, name="Info"):
         em.description += f"\n{role.name}" 
 
     elif isinstance(mention, discord.Role):
+      em.title = f"{mention.name} Rol Stats"
+
       role = ctx.guild.get_role(mention.id)
 
       em.description += f"> **miembros**: {len(role.members)}"
