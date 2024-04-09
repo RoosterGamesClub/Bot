@@ -105,7 +105,7 @@ async def on_member_join(member):
 
   await channel.send(file=file, embed=em)
 
-  await set_role(member.guild, member, "Aspirante", True)
+  await set_role(member.guild, member, "Aspirantes", True)
 
 # RE-ROL MESSAGE
 @bot.event
