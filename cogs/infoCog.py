@@ -96,7 +96,7 @@ class InfoCog(commands.Cog, name="Info"):
 
     description_ = ""
     description_ += "Aunque solo me vean en la pantalla, soy un miembro activo del equipo y el **líder supremo**. Confío plenamente en cada uno de los miembros del Club para crear juegos increíbles, ya que son talentosos y comprometidos"
-    description_ += "\n\nContribuye a mi desarrollo [aquí](https://github.com/RoosterGamesClub/poio-bot.git)"
+    description_ += "\n\nContribuye a mi desarrollo [aquí](https://github.com/RoosterGamesClub/Poio-Bot)"
 
     em = discord.Embed(title=title_, url=url_, description=description_, color=MAIN_COLOR)
 
