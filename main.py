@@ -58,6 +58,7 @@ async def on_ready():
 
   main_logger.log(logging.INFO, "loading custom help commnd...")
   bot.help_command = helpCommand.CustomHelpCommand()
+  bot.tree.add_command(CustomHelpSlashCommand)
 
   main_logger.log(logging.INFO, "--------------   loading cogs   --------------")
 
@@ -158,6 +159,15 @@ async def set_role(guild : discord.guild, member : discord.Member, role_name : s
   else:  
     if is_addition:
       await member.add_roles(role)
+
+# THE HELP SLASH COMMAND
+@discord.app_commands.command(name="help")
+async def CustomHelpSlashCommand(interaction: discord.Interaction):
+  mapping = utils.otherUtils.get_bot_mapping(bot)
+
+  em = helpCommand.get_help_embed(mapping)
+
+  await interaction.response.send_message(embed=em)
 
 """ COMMANDS """
 # UTILITY COMMANDS

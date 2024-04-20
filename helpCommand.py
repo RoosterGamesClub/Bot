@@ -4,11 +4,43 @@ from discord.ext import commands
 
 from settings import MAIN_COLOR, COMMAND_PREFIX
 
+from utils import otherUtils
+
+HELP_USAGE_STR = f"\n\nType `{COMMAND_PREFIX}help command_name` for more info on a command. You can also type `{COMMAND_PREFIX}help category_name` for more info on a category"
+
+""" 
+I create this helper functions to centralize the help message creation. This are then called from
+both the CustomHelpCommand class and the CustomHelpSlashCommand. Not too elegent but good enough for now  
+"""
+
+def get_help_embed(mapping):
+  desciption_ = ""
+  for cog, cmds in mapping.items():
+    
+    if cog:
+      desciption_ += f"\n\n__**{cog.qualified_name}**__"
+    else:
+      desciption_ += "\n\n__**No Category**__"
+
+    for command in cmds:
+      if command.hidden: 
+        continue
+
+      desciption_ += f"\n**{COMMAND_PREFIX}{command.qualified_name}: ** {command.brief}"
+
+  desciption_ += HELP_USAGE_STR
+
+  em = discord.Embed(title="", description=desciption_, color=MAIN_COLOR)
+
+  return em
+
+# [TODO] create helper functions for help_command and help_cog embeds
+
 class CustomHelpCommand(commands.HelpCommand):
   def __init__(self):
     super().__init__()
 
-    self.help_usage_str = f"\n\nType `{COMMAND_PREFIX}help command_name` for more info on a command. You can also type `{COMMAND_PREFIX}help category_name` for more info on a category"
+    self.help_usage_str = HELP_USAGE_STR
 
     self.command_attrs["brief"] = "show this message"
 
@@ -16,23 +48,7 @@ class CustomHelpCommand(commands.HelpCommand):
     self.command_attrs["description"] += self.help_usage_str
 
   async def send_bot_help(self, mapping):
-    desciption_ = ""
-    for cog, cmds in mapping.items():
-      
-      if cog:
-        desciption_ += f"\n\n__**{cog.qualified_name}**__"
-      else:
-        desciption_ += "\n\n__**No Category**__"
-
-      for command in cmds:
-        if command.hidden: 
-          continue
-
-        desciption_ += f"\n**{COMMAND_PREFIX}{command.qualified_name}: ** {command.brief}"
-
-    desciption_ += self.help_usage_str
-
-    em = discord.Embed(title="", description=desciption_, color=MAIN_COLOR)
+    em = get_help_embed(mapping)
 
     channel = self.get_destination()
     await channel.send(embed=em)
@@ -79,4 +95,3 @@ class CustomHelpCommand(commands.HelpCommand):
 
     channel = self.get_destination()
     await channel.send(embed=em)
- 

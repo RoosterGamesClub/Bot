@@ -1,5 +1,9 @@
+from typing import Any, Dict, List, Optional
 import discord
 from discord.ext import commands
+
+import discord.ext
+import discord.ext.commands
 
 def getDiscordColorFromString(color_str : str):
   if color_str == "" or color_str == "random":
@@ -63,3 +67,11 @@ def get_she_her_emoji(guild: discord.Guild):
 
 def get_they_them_emoji(guild: discord.Guild):
   return discord.utils.get(guild.emojis, name="pronouns_they")
+
+def get_bot_mapping(bot : discord.ext.commands.Bot) -> Dict[Optional[commands.Cog], List[commands.Command[Any, ..., Any]]]:
+    """Retrieves the bot mapping. this is basically a copy of the method inside HelpCommand class."""
+    
+    mapping: Dict[Optional[commands.Cog], List[commands.Command[Any, ..., Any]]] = {cog: cog.get_commands() for cog in bot.cogs.values()}
+    mapping[None] = [c for c in bot.commands if c.cog is None]
+    
+    return mapping
