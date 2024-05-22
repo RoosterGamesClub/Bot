@@ -62,7 +62,12 @@ class AdminCog(commands.Cog, name="Admin"):
     
     author = interaction.user
     
-    if not utils.otherUtils.isAdmin(interaction.guild, author):
+    ctx = commands.Context()
+
+    ctx.guild = interaction.guild
+    ctx.author = interaction.user
+
+    if not utils.otherUtils.isAdmin(ctx):
       self.logger.log(logging.INFO, f"access denied for user {author.display_name} (member ID: {author.id}) when running anouncemnt (slash command) command")
       return
 
@@ -72,7 +77,7 @@ class AdminCog(commands.Cog, name="Admin"):
   async def announcement(self, ctx:commands.context, title:str, description:str, image_url:str):
     author = ctx.author
 
-    if not utils.otherUtils.isAdmin(ctx.guild, author):
+    if not utils.otherUtils.isAdmin(ctx):
       self.logger.log(logging.INFO, f"access denied for user {author.display_name} (member ID: {author.id}) when running anouncemnt (normal command) command")
       return
 
@@ -92,7 +97,7 @@ class AdminCog(commands.Cog, name="Admin"):
     
     guild = ctx.guild
 
-    if not utils.otherUtils.isAdmin(guild, ctx.message.author):
+    if not utils.otherUtils.isAdmin(ctx):
       return
 
     he_emoji = utils.otherUtils.get_he_him_emoji(guild)
@@ -140,7 +145,7 @@ class AdminCog(commands.Cog, name="Admin"):
   @commands.command(hidden=True)
   async def genrules(self, ctx : commands.Context):
     
-    if not utils.otherUtils.isAdmin(ctx.guild, ctx.message.author):
+    if not utils.otherUtils.isAdmin(ctx):
       return
 
     em = discord.Embed(title="Las reglas", color=MAIN_COLOR)

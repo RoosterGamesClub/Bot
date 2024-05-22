@@ -43,11 +43,17 @@ def getDiscordColorFromString(color_str : str):
   
   return discord.Color.from_str(color_str)
 
-def isAdmin(guild : discord.guild, member : discord.Member) -> bool:
-  admin_role = discord.utils.get(guild.roles, name="silkie chicken")
+def __isRole(guild : discord.guild, member : discord.Member, role_name : str) -> bool:
+  admin_role = discord.utils.get(guild.roles, name=role_name)
 
   if admin_role in member.roles:
     return True
+
+def isRole(ctx : commands.context, role_name : str):
+  return __isRole(ctx.guild, ctx.author, role_name)
+
+def isAdmin(ctx : commands.Context) -> bool:
+  return isRole(ctx, "silkie chicken")
   
 def isDev(member: discord.Member):
   devs_discords_user_id = [

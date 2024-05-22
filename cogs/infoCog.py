@@ -7,6 +7,7 @@ from discord.ext import commands
 from settings import MAIN_COLOR
 
 import utils.loggingUtils
+import utils.otherUtils
 
 class InfoCog(commands.Cog, name="Info"):
 
@@ -143,16 +144,48 @@ class InfoCog(commands.Cog, name="Info"):
 
     await ctx.send(embed=em)
 
-  @commands.hybrid_command(brief="know our work", description="get a list of the projects we've build and/or are currently working on")
-  async def projects(self, ctx):
+  async def __proyects_show(self, ctx):
     em = discord.Embed(title="", description="", color=MAIN_COLOR)
 
-    em.title = "Proyectos"
+    em.title = "Projects"
 
-    # em.description += "\n__Upcoming__"
-    # em.description += "\n"
     em.description += "\nRed Hood"
-    em.description += "\nUaa Ascension"
     em.description += "\nNatu"
+
+    await ctx.send(embed=em)
+
+  @commands.hybrid_group(brief="know our work", description="get a list of the projects we've build and/or are currently working on")
+  async def projects(self, ctx):
+    await self.__proyects_show(ctx)
+
+  @projects.command(name="show", brief="know our work", description="get a list of the projects we've build and/or are currently working on")
+  async def projects_show(self, ctx):
+    await self.__proyects_show(ctx)
+
+  @projects.command(name="natu", brief="resources for Natu", description="get a list of resources for Natu")
+  async def proyectos_main(self, ctx):
+    if not utils.otherUtils.isRole(ctx, "Natu"):
+      return await ctx.send("Not a member of Natu")
+
+    em = discord.Embed(title = "", description="", color=MAIN_COLOR)
+
+    em.title="Natu's resources"
+
+    em.description += "\n[The Milanote](https://app.milanote.com/1S7tUv15aVQk2b/natu?p=pWUsBgCem2B) for ideas and more"
+    em.description += "\n[The Github](https://github.com/RoosterGamesClub/Natu) to save the work"
+    em.description += "\n[The Art Reference](https://drive.google.com/drive/folders/1rd0niaU6imMJzC9nerQq8uP3nRCDUABU) to get an idea of how it may look"
+
+    await ctx.send(embed=em)
+
+  @projects.command(name="reed", brief="resources for Reed Hood", description="get a list of resources for Red Hood")
+  async def projects_reed_hood(self, ctx):
+    if not utils.otherUtils.isRole(ctx, "Reed Hood"):
+      return await ctx.send("Not a member of Reed Hood")
+
+    em = discord.Embed(description="", color=MAIN_COLOR)
+
+    em.title = "Red Hood's resources"
+
+    em.description += "\n[The Github](https://github.com/RoosterGamesClub/Red-Hood) to save the work"
 
     await ctx.send(embed=em)
