@@ -17,8 +17,8 @@ birthdays = {
 """
 
 birthdays = {
-  #"3-11" : {"member_id" : 334016584093794305, "name" : "test-event"}, #maybe aqui agregar el cumpleaños de posho
-  "8-27" : {"member_id" : 334016584093794305, "name" : "leo aka wissens"},
+  # "8-8" : {"member_id" : 334016584093794305, "name" : "test-event"}, #maybe aqui agregar el cumpleaños de posho
+  # "8-27" : {"member_id" : 334016584093794305, "name" : "leo aka wissens"},
   "11-2" : {"member_id" : 637770445172768768, "name" : "leslie aka bistraw"},
   "7-13" : {"member_id" : 985700030130315284, "name" : "feruk"},
   "9-9"  : {"member_id" : 842438155508252675, "name" : "diegongi"}
