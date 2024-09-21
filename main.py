@@ -194,7 +194,7 @@ async def poll(ctx : commands.context, title : str, option_1 = "", option_2 = ""
 
   em = discord.Embed(title=title, color=MAIN_COLOR)
 
-  if utils.otherUtils.isAdmin(ctx.guild, ctx.author) and is_official_poll:
+  if utils.otherUtils.isAdmin(ctx) and is_official_poll:
     em.set_author(name="by Rooster Games")
 
   if len(options) == 0:

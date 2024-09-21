@@ -141,7 +141,6 @@ class AdminCog(commands.Cog, name="Admin"):
     await message.add_reaction(she_emoji)
     await message.add_reaction(he_emoji)
     
-
   @commands.command(hidden=True)
   async def genrules(self, ctx : commands.Context):
     
