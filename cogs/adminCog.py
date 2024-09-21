@@ -62,7 +62,7 @@ class AdminCog(commands.Cog, name="Admin"):
     
     author = interaction.user
     
-    ctx = commands.Context()
+    ctx = commands.context
 
     ctx.guild = interaction.guild
     ctx.author = interaction.user
