@@ -25,11 +25,11 @@ class DevCog(commands.Cog, name="Dev"):
   async def cog_before_invoke(self, ctx):
     utils.loggingUtils.log_command_call(self.logger, ctx) 
 
-  @commands.hybrid_command(brief="pong", description="test for correct bot connection")
+  @commands.hybrid_command(hidden=True, brief="pong", description="test for correct bot connection")
   async def ping(self, ctx):
     await ctx.send(f"pong! {int(round(self.bot.latency, 3) * 1000)}ms")
 
-  @commands.hybrid_command(brief="last commits", description="get a list of all the recent improvements, new features and bug fixes done to poio")
+  @commands.hybrid_command(brief="latest commits", description="get a list of all the recent improvements, new features and bug fixes done to poio")
   async def changelog(self, ctx):
     # obtain the log from local repo
     repo = git.Repo(os.getcwd())
@@ -57,7 +57,7 @@ class DevCog(commands.Cog, name="Dev"):
     em = discord.Embed(title=f"Poio v_{version}", description=logs, color=MAIN_COLOR)
     await ctx.send(embed=em)
 
-  @commands.hybrid_command(brief="show the log", description="get a list of the lastest log entries, output will depend on LOG_LEVEL, by default INFO")
+  @commands.hybrid_command(hidden=True, brief="show the log", description="get a list of the lastest log entries, output will depend on LOG_LEVEL, by default INFO")
   async def log(self, ctx, lines = 50):
     title_ = f"Poio.log at {datetime.datetime.now()} last {lines} lines"
     
@@ -81,7 +81,7 @@ class DevCog(commands.Cog, name="Dev"):
     with open("bugs.txt", "a") as file:
       file.write(f"\n{bug_number}.\t [{ctx.message.created_at}] by {ctx.message.author.display_name} (user ID: {ctx.message.author.id}) \treport: {description}")
 
-    await ctx.send(f"> bug logged as `#{bug_number}`")
+    await ctx.send(f"> _**\"{description}\"**_ logged as `#{bug_number}`")
 
   # GOD COMMANDS (only for devs)
   @commands.command(hidden=True, brief="sync commands", description="sync the current app command tree")

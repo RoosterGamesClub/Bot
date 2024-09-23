@@ -69,22 +69,22 @@ class InfoCog(commands.Cog, name="Info"):
       em.description += "\n"
 
       if programming_role:
-        em.description += f"\n**{len(programming_role.members)}** - Programadores"
+        em.description += f"\n**{len(programming_role.members)}** - Programming"
 
       if gamedesing_role:
-        em.description += f"\n**{len(gamedesing_role.members)}** - Game Designers"
+        em.description += f"\n**{len(gamedesing_role.members)}** - GameDesing"
 
       if graphics_role:
-        em.description += f"\n**{len(graphics_role.members)}** - Artistas/Animadores"
+        em.description += f"\n**{len(graphics_role.members)}** - Graphics/Animation"
 
       if music_role:
-        em.description += f"\n**{len(music_role.members)}** - Músicos/Compositores "
+        em.description += f"\n**{len(music_role.members)}** - Music"
 
       if sound_role:
-        em.description += f"\n**{len(sound_role.members)}** - Actores de voz/Sound designers"
+        em.description += f"\n**{len(sound_role.members)}** - SoundDesign/VoiceActing"
 
       if writting_role:
-        em.description += f"\n**{len(writting_role.members)}** - Escritores"
+        em.description += f"\n**{len(writting_role.members)}** - Writing/NarrativeDesign"
 
     await ctx.send(embed=em)
 
@@ -103,30 +103,6 @@ class InfoCog(commands.Cog, name="Info"):
 
     await ctx.send(embed=em)
 
-  @commands.hybrid_command(brief="official website link", description="get a link to Rooster Games official website")
-  async def website(self, ctx):
-    await ctx.send("> <https://roostergamesclub.github.io/Site/index.html>")
-
-  @commands.hybrid_command(brief="github link", description="get a link to Rooster Games official github organization")
-  async def github(self, ctx):
-    await ctx.send("> <https://github.com/RoosterGamesClub>")
-
-  @commands.hybrid_command(brief="linkedin link", description="get a link to Rooster Games official linkedin company profile")
-  async def linkedin(self, ctx):
-    await ctx.send("> <https://www.linkedin.com/company/rooster-games-devclub/about/>")
-
-  @commands.hybrid_command(brief="x (twitter) link", description="get a link to Rooster Games official x account")
-  async def x(self, ctx):
-    await ctx.send("> <https://twitter.com/RoosterGamesUaa>")
-
-  @commands.hybrid_command(brief="youtube link", description="get a link to Rooster Games official youtube channel")
-  async def youtube(self, ctx):
-    await ctx.send("> <https://www.youtube.com/channel/UCEti3QAC17BPa1MzS4moV5w>")
-
-  @commands.hybrid_command(brief="instagram link", description="get a link to Rooster Games official instagram profile")
-  async def instagram(self, ctx):
-    await ctx.send("> <https://www.instagram.com/rooster.games/>")
-
   @commands.hybrid_command(brief="social accounts links", description="get a list of all Rooster Games social accounts")
   async def socials(self, ctx):
     title_ = "Rooster Games Socials"
@@ -134,6 +110,7 @@ class InfoCog(commands.Cog, name="Info"):
     url_ = "https://roostergamesclub.github.io/Site/index.html"
 
     description_ = ""
+    description_ += "\n**Website: **[roostergamesclub](https://roostergamesclub.github.io/Site/index.html)"
     description_ += "\n**GitHub: **[RoosterGamesClub](https://github.com/RoosterGamesClub)"
     description_ += "\n**LinkedIn: **[Rooster Games](https://www.linkedin.com/company/rooster-games-devclub/about/)"
     description_ += "\n**X (twitter): **[@RoosterGamesUaa](https://twitter.com/RoosterGamesUaa)"
@@ -149,16 +126,18 @@ class InfoCog(commands.Cog, name="Info"):
 
     em.title = "Projects"
 
-    em.description += "\nRed Hood"
-    em.description += "\nNatu"
+    #em.description += "\nRed Hood"
+    #em.description += "\nNatu"
+
+    em.description += "We'll start a new project soon. Make sure to [leave a propousal here](https://docs.google.com/forms/d/e/1FAIpQLSdomvlxpXMuAKcRC0UkWgI4tfx-sdha4MjS474sqbT0HzE_rQ/viewform)"
 
     await ctx.send(embed=em)
 
-  @commands.hybrid_group(brief="know our work", description="get a list of the projects we've build and/or are currently working on")
+  @commands.hybrid_group(brief="know the work", description="get a list of the projects we've build and/or are currently working on")
   async def projects(self, ctx):
     await self.__proyects_show(ctx)
 
-  @projects.command(name="show", brief="know our work", description="get a list of the projects we've build and/or are currently working on")
+  @projects.command(name="show", brief="know the work", description="get a list of the projects we've build and/or are currently working on")
   async def projects_show(self, ctx):
     await self.__proyects_show(ctx)
 

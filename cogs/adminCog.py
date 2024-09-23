@@ -92,6 +92,7 @@ class AdminCog(commands.Cog, name="Admin"):
     message = await channel.send(embed=em)
     await ctx.send(f"[anouncement]({message.jump_url}) publish on {channel.mention}")
 
+  # ADMIN COMMANDS (only for admins)
   @commands.command(hidden=True)
   async def genrerol(self, ctx : commands.Context):
     
