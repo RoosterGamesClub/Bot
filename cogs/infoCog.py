@@ -29,14 +29,13 @@ class InfoCog(commands.Cog, name="Info"):
     if isinstance(mention, discord.Member):
       em.set_author(name=f"\"{mention.display_name}\" stats", url="", icon_url=mention.display_avatar.url)
     
-      em.description += f"\n**__Rooster desde__** \n{mention.joined_at.strftime('%Y-%m-%d')}"
+      em.description += f"\n**__Rooster since__** \n{mention.joined_at.strftime('%Y-%m-%d')}"
       
-      em.description += "\n\n**__Intereses__**"
+      em.description += "\n\n**__Roles__**"
       for role in mention.roles:
-        #print(role.name)
 
         if role.name == "@everyone": continue
-        if role.name == "silkie chicken": continue
+        if role.name.lower() == "Silkie Chicken".lower(): continue
 
         em.description += f"\n{role.name}" 
 
@@ -45,7 +44,7 @@ class InfoCog(commands.Cog, name="Info"):
 
       role = ctx.guild.get_role(mention.id)
 
-      em.description += f"> **miembros**: {len(role.members)}"
+      em.description += f"> **members**: {len(role.members)}"
     
       em.description += "\n"
       for i, member in enumerate(role.members):
@@ -57,7 +56,7 @@ class InfoCog(commands.Cog, name="Info"):
     else:
       em.title = "Rooster Games Stats"
 
-      em.description += f"\n**{len(ctx.guild.members)}** - Miembros"
+      em.description += f"\n**{len(ctx.guild.members)}** - Members"
 
       programming_role = discord.utils.get(ctx.guild.roles,name="Programming")
       gamedesing_role = discord.utils.get(ctx.guild.roles,name="GameDesign")
